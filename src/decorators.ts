@@ -5,7 +5,7 @@
 ** decorators
 */
 
-import { EloRatedObject } from "./elo-rated";
+import { EloRatedObject } from "./types";
 
 export function EloRated<T extends { new(...args: any[]): {} }>(constructor: T) {
   return class extends constructor implements EloRatedObject {

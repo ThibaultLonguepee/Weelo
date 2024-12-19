@@ -5,23 +5,7 @@
 ** engine
 */
 
-import { TeloConfig } from "./config";
-import { EloRatedObject } from "./elo-rated";
-
-function isNumber(x: any): x is number {
-  return typeof x === "number";
-}
-
-type NumericKeys<T> = {
-  [K in keyof T]: T[K] extends number ? K : never;
-}[keyof T];
-
-
-export enum GameResult {
-  WIN = 1.0,
-  DRAW = 0.5,
-  LOSS = 0.0
-}
+import { EloRatedObject, GameResult, isNumber, NumericKeys, TeloConfig } from "./types";
 
 export class Telo {
 

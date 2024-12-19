@@ -2,5 +2,8 @@
 node_modules
 package-lock.json
 
+# Settings
+.vscode
+
 # Builds
 dist

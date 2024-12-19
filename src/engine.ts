@@ -48,7 +48,7 @@ export class Telo {
           public wonAgainst = (opponent: T) => this._resolve(player, opponent, GameResult.WIN);
           public lostAgainst = (opponent: T) => this._resolve(player, opponent, GameResult.LOSS);
           public tiedAgainst = (opponent: T) => this._resolve(player, opponent, GameResult.DRAW);
-          private _resolve(a: T, b: T, result: GameResult) {
+          public _resolve(a: T, b: T, result: GameResult) {
             if (!isNumber(a[key]) || !isNumber(b[key]))
               return;
             const { deltaA, deltaB } = Telo._getEloChanges(a[key], b[key], result);

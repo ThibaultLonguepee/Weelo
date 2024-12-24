@@ -1,21 +1,21 @@
 /*
 ** EPITECH PROJECT, 2024
-** Telo
+** Weelo
 ** File description:
 ** engine
 */
 
-import { EloRatedObject, GameResult, isNumber, NumericKeys, TeloConfig } from "./types";
+import { EloRatedObject, GameResult, isNumber, NumericKeys, WeeloConfig } from "./types";
 
-export class Telo {
+export class weelo {
 
-  private static config: TeloConfig = new TeloConfig();
-  public static setConfig(_c: TeloConfig) {
+  private static config: WeeloConfig = new WeeloConfig();
+  public static setConfig(_c: WeeloConfig) {
     this.config = _c
   }
 
   public static resolve(a: EloRatedObject, b: EloRatedObject, result: GameResult): void {
-    const { deltaA, deltaB } = this._getEloChanges(a.elo, b.elo, result);
+    const { deltaA, deltaB } = this._geWeeloChanges(a.elo, b.elo, result);
     a.elo += deltaA;
     b.elo += deltaB;
   }
@@ -23,13 +23,13 @@ export class Telo {
   public static player(player: EloRatedObject) {
     return new class {
       public wonAgainst(opponent: EloRatedObject) {
-        Telo.resolve(player, opponent, GameResult.WIN);
+        weelo.resolve(player, opponent, GameResult.WIN);
       }
       public lostAgainst(opponent: EloRatedObject) {
-        Telo.resolve(player, opponent, GameResult.LOSS);
+        weelo.resolve(player, opponent, GameResult.LOSS);
       }
       public tiedAgainst(opponent: EloRatedObject) {
-        Telo.resolve(player, opponent, GameResult.DRAW);
+        weelo.resolve(player, opponent, GameResult.DRAW);
       }
     }
   }
@@ -39,7 +39,7 @@ export class Telo {
       public resolve(a: T, b: T, result: GameResult) {
         if (!isNumber(a[key]) || !isNumber(b[key]))
           return;
-        const { deltaA, deltaB } = Telo._getEloChanges(a[key], b[key], result);
+        const { deltaA, deltaB } = weelo._geWeeloChanges(a[key], b[key], result);
         a[key] = (a[key] + deltaA) as T[NumericKeys<T>];
         b[key] = (b[key] + deltaB) as T[NumericKeys<T>];
       }
@@ -51,7 +51,7 @@ export class Telo {
           public _resolve(a: T, b: T, result: GameResult) {
             if (!isNumber(a[key]) || !isNumber(b[key]))
               return;
-            const { deltaA, deltaB } = Telo._getEloChanges(a[key], b[key], result);
+            const { deltaA, deltaB } = weelo._geWeeloChanges(a[key], b[key], result);
             a[key] = (a[key] + deltaA) as T[NumericKeys<T>];
             b[key] = (b[key] + deltaB) as T[NumericKeys<T>];
           }
@@ -60,7 +60,7 @@ export class Telo {
     }
   }
 
-  private static _getEloChanges(eloA: number, eloB: number, result: GameResult): { deltaA: number, deltaB: number } {
+  private static _geWeeloChanges(eloA: number, eloB: number, result: GameResult): { deltaA: number, deltaB: number } {
     const pA = this._p(eloA - eloB);
     const pB = this._p(eloB - eloA);
     return {

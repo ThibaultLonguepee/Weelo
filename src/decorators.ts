@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** Telo
+** Weelo
 ** File description:
 ** decorators
 */

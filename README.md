@@ -68,7 +68,7 @@ Player { name: 'Noah', power: 1025 }
 ## Decorators apporach
 
 This is the less recommended approach "out of the two";<bre>
-for technical reason, the implementation given in Telo is far from being a great one, I wish to make it better in next updates.
+for technical reason, the implementation given in Weelo is far from being a great one, I wish to make it better in next updates.
 
 > Basically some stuff about decorators not mutating a class topology at compile time meaning type-safety cannot be assured...
 

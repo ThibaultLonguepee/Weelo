@@ -7,3 +7,4 @@
 
 export * from "./engine"
 export * from "./decorators"
+export { isEloRated, GameResult } from "./types"

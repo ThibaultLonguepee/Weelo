@@ -15,7 +15,7 @@ export interface EloRatedObject {
     elo: number;
 }
 
-export function isEloRated(obj: object): obj is EloRatedObject {
+export function isEloRated(obj: any): obj is EloRatedObject {
     return "elo" in obj;
 }
 

@@ -5,7 +5,7 @@
 ** engine
 */
 
-import { EloRatedObject, GameResult, isNumber, NumericKeys, WeeloConfig } from "./types";
+import { EloRatedObject, GameResult, isEloRated, isNumber, NumericKeys, WeeloConfig } from "./types";
 
 export class weelo {
 
@@ -15,21 +15,29 @@ export class weelo {
   }
 
   public static resolve(a: EloRatedObject, b: EloRatedObject, result: GameResult): void {
-    const { deltaA, deltaB } = this._geWeeloChanges(a.elo, b.elo, result);
+    const { deltaA, deltaB } = this._eloDeltas(a.elo, b.elo, result);
     a.elo += deltaA;
     b.elo += deltaB;
   }
 
-  public static player(player: EloRatedObject) {
+  public static resolve_any<T>(a: T, b: T, result: GameResult): void {
+    if (!isEloRated(a) || !isEloRated(b))
+        return;
+    const { deltaA, deltaB } = this._eloDeltas(a.elo, b.elo, result);
+    a.elo += deltaA;
+    b.elo += deltaB;
+  }
+
+  public static player<T>(player: T) {
     return new class {
-      public wonAgainst(opponent: EloRatedObject) {
-        weelo.resolve(player, opponent, GameResult.WIN);
+      public wonAgainst(opponent: T) {
+        weelo.resolve_any(player, opponent, GameResult.WIN);
       }
-      public lostAgainst(opponent: EloRatedObject) {
-        weelo.resolve(player, opponent, GameResult.LOSS);
+      public lostAgainst(opponent: T) {
+        weelo.resolve_any(player, opponent, GameResult.LOSS);
       }
-      public tiedAgainst(opponent: EloRatedObject) {
-        weelo.resolve(player, opponent, GameResult.DRAW);
+      public tiedAgainst(opponent: T) {
+        weelo.resolve_any(player, opponent, GameResult.DRAW);
       }
     }
   }
@@ -39,7 +47,7 @@ export class weelo {
       public resolve(a: T, b: T, result: GameResult) {
         if (!isNumber(a[key]) || !isNumber(b[key]))
           return;
-        const { deltaA, deltaB } = weelo._geWeeloChanges(a[key], b[key], result);
+        const { deltaA, deltaB } = weelo._eloDeltas(a[key], b[key], result);
         a[key] = (a[key] + deltaA) as T[NumericKeys<T>];
         b[key] = (b[key] + deltaB) as T[NumericKeys<T>];
       }
@@ -51,7 +59,7 @@ export class weelo {
           public _resolve(a: T, b: T, result: GameResult) {
             if (!isNumber(a[key]) || !isNumber(b[key]))
               return;
-            const { deltaA, deltaB } = weelo._geWeeloChanges(a[key], b[key], result);
+            const { deltaA, deltaB } = weelo._eloDeltas(a[key], b[key], result);
             a[key] = (a[key] + deltaA) as T[NumericKeys<T>];
             b[key] = (b[key] + deltaB) as T[NumericKeys<T>];
           }
@@ -60,16 +68,16 @@ export class weelo {
     }
   }
 
-  private static _geWeeloChanges(eloA: number, eloB: number, result: GameResult): { deltaA: number, deltaB: number } {
+  private static _eloDeltas(eloA: number, eloB: number, result: GameResult): { deltaA: number, deltaB: number } {
     const pA = this._p(eloA - eloB);
     const pB = this._p(eloB - eloA);
     return {
-      deltaA: this._computeEloChange(result, pA),
-      deltaB: this._computeEloChange(1 - result, pB),
+      deltaA: this._eloDelta(result, pA),
+      deltaB: this._eloDelta(1 - result, pB),
     }
   }
 
-  private static _computeEloChange(w: number, p: number): number {
+  private static _eloDelta(w: number, p: number): number {
     return Math.round(this.config.multiplier * (w - p));
   }
 

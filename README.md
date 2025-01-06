@@ -1,9 +1,5 @@
 # 📈 weelo
 
-An easy-to-use Typscript ELO engine package.
-
-# 🤔 *What is* weelo?
-
 **weelo** is an easy to use ELO / Ranking manager.<br>
 It helps you by having a lot of built-in features for easy to use ranking systems based on the ELO system.<br>
 **weelo** manages multi-ladder systems well;<br>
@@ -55,7 +51,7 @@ So they are both considered to have the same power.<br>
 Now, for the sake of the example, let's say that Noah duels Will, and wins it;<br>
 We can then **use weelo to determine how much powerful they should be considered now**:
 ```ts
-Weelo.ladder<Player>("power").player(noah).wonAgainst(will);
+weelo.ladder<Player>("power").player(noah).wonAgainst(will);
 /// Would be the same as doing:
 /// Weelo.ladder<Player>("power").player(will).lostAgainst(noah)
 ```
@@ -67,21 +63,21 @@ Player { name: 'Noah', power: 1025 }
 
 ## Decorators apporach
 
-This is the less recommended approach "out of the two";<bre>
-for technical reason, the implementation given in Weelo is far from being a great one, I wish to make it better in next updates.
-
-> Basically some stuff about decorators not mutating a class topology at compile time meaning type-safety cannot be assured...
+This is the less recommended approach "out of the two"; It is less versatile and gives you less control on what you're doing.<br>
+Still, a mix of both this approach and the aforementionned "Ladder approach" can be used...
+> but now we're getting into very disturbing implementations...
 
 Let's start by making a class for our players:
 ```ts
-// Class representation of a Player with an elo score.
+/// Class representation of a Player with an elo score and a name.
+/// Use the @EloRated decorator on a class to give it an "elo" property.
 @EloRated
 class Player {
     name: string = "Guest";
     constructor (name: string) { this.name = name; }
 }
 ```
-Now that you have an `EloRated` class, let's head forward and make players battle,<br>
+Now that you have an `@EloRated` class, let's head forward and make players battle,<br>
 For this, let's create two Players:
 ```ts
 /// Create a player named "Will", and one named "Noah".
@@ -91,13 +87,11 @@ const noah = new Player("Noah");
 Now, after a rough battle, Noah wins the battle, and so, it's ranking must increase relatively to it's opponant ranking;<br>
 Let's use **weelo** tools for that:
 ```ts
-/// Temporarily needed, to ensure they have the Elo system injected
-if (isEloRated(will) && isEloRated(noah)) {
-    Weelo.player(noah).wonAgainst(will);
-    /// Same as doing the following:
-    /// Weelo.player(will).lostAgainst(noah);
-    /// Weelo.resolve(noah, will, GameResult.WIN);
-}
+/// Let noah win over will
+weelo.player(noah).wonAgainst(will);
+/// Would be the same as doing:
+/// weelo.player(will).lostAgainst(noah);
+/// weelo.resolve_any(noah, will, GameResult.WIN);
 ```
 Using a `console.log` on both our players reveals that they do have an `elo` score:
 ```
@@ -105,3 +99,9 @@ Player { name: 'Will', elo: 1225 }
 Player { name: 'Noah', elo: 1175 }
 ```
 As you can see, Noah got a higher ELO than Will after the battle he won.
+
+# 💬 Comments
+
+- There are many other ways you can use `weelo` as currently delivered. You can, for example, make a class implement the `EloRated` interface (baiscally certifying it implements an `elo` property).
+
+- Following the above comment, making `EloRated` a class and allowing to have methods to update own elo would make an inheritance usage better.

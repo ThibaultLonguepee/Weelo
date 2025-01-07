@@ -1,11 +1,11 @@
 {
   "name": "weelo",
   "author": "weewoo",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "An ELO engine written in Typescript",
   "license": "Apache License 2.0",
   "repository": {
-    "url": "https://github.com/ThibaultLonguepee/Weelo"
+    "url": "https://github.com/ThibaultLonguepee/weelo"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

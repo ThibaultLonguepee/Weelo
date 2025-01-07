@@ -30,6 +30,10 @@ export class weelo {
 
   public static player<T>(player: T) {
     return new class {
+      public setElo(value: number) {
+        if (isEloRated(player))
+          player.elo = value;
+      }
       public wonAgainst(opponent: T) {
         weelo.resolve_any(player, opponent, GameResult.WIN);
       }

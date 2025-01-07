@@ -57,6 +57,7 @@ export class weelo {
       }
       public player(player: T) {
         return new class {
+          public setElo = (value: number) => { if (isEloRated(player)) player.elo = value; };
           public wonAgainst = (opponent: T) => this._resolve(player, opponent, GameResult.WIN);
           public lostAgainst = (opponent: T) => this._resolve(player, opponent, GameResult.LOSS);
           public tiedAgainst = (opponent: T) => this._resolve(player, opponent, GameResult.DRAW);

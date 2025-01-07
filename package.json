@@ -5,7 +5,7 @@
   "description": "An ELO engine written in Typescript",
   "license": "Apache License 2.0",
   "repository": {
-    "url": "https://github.com/ThibaultLonguepee/weelo"
+    "url": "git+https://github.com/ThibaultLonguepee/weelo.git"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

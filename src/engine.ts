@@ -28,6 +28,14 @@ export class weelo {
     b.elo += deltaB;
   }
 
+  private static resolve_ladder<T>(a: T, b: T, result: GameResult, ladder: NumericKeys<T>) {
+    if (!isNumber(a[ladder]) || !isNumber(b[ladder]))
+      return;
+    const { deltaA, deltaB } = weelo._eloDeltas(a[ladder], b[ladder], result);
+    a[ladder] = (a[ladder] + deltaA) as T[NumericKeys<T>];
+    b[ladder] = (b[ladder] + deltaB) as T[NumericKeys<T>];
+  }
+
 
 
   public static player<T>(player: T) {
@@ -46,15 +54,9 @@ export class weelo {
           return player.elo - other.elo;
       }
 
-      public wonAgainst(opponent: T): void {
-        weelo.resolve_any(player, opponent, GameResult.WIN);
-      }
-      public lostAgainst(opponent: T): void {
-        weelo.resolve_any(player, opponent, GameResult.LOSS);
-      }
-      public tiedAgainst(opponent: T): void {
-        weelo.resolve_any(player, opponent, GameResult.DRAW);
-      }
+      public wonAgainst = (opponent: T) => weelo.resolve_any(player, opponent, GameResult.WIN);
+      public lostAgainst = (opponent: T) => weelo.resolve_any(player, opponent, GameResult.LOSS);
+      public tiedAgainst = (opponent: T) =>weelo.resolve_any(player, opponent, GameResult.DRAW);
     }
   }
 
@@ -85,23 +87,9 @@ export class weelo {
               return player[key] - other[key];
           }
 
-          public wonAgainst(opponent: T): void {
-            return this._resolve(player, opponent, GameResult.WIN);
-          }
-          public lostAgainst(opponent: T): void {
-            return this._resolve(player, opponent, GameResult.LOSS);
-          }
-          public tiedAgainst(opponent: T): void {
-            return this._resolve(player, opponent, GameResult.DRAW);
-          }
-
-          private _resolve(a: T, b: T, result: GameResult): void {
-            if (!isNumber(a[key]) || !isNumber(b[key]))
-              return;
-            const { deltaA, deltaB } = weelo._eloDeltas(a[key], b[key], result);
-            a[key] = (a[key] + deltaA) as T[NumericKeys<T>];
-            b[key] = (b[key] + deltaB) as T[NumericKeys<T>];
-          }
+          public wonAgainst = (opponent: T) => weelo._resolve_ladder(player, opponent, GameResult.WIN, key);
+          public lostAgainst = (opponent: T) => weelo._resolve_ladder(player, opponent, GameResult.LOSS, key);
+          public tiedAgainst = (opponent: T) => weelo._resolve_ladder(player, opponent, GameResult.DRAW, key);
         }
       }
     }

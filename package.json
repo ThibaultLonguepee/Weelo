@@ -1,7 +1,7 @@
 {
   "name": "weelo",
   "author": "weewoo",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "An ELO engine written in Typescript",
   "license": "Apache License 2.0",
   "repository": {

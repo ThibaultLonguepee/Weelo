@@ -30,17 +30,25 @@ export class weelo {
 
   public static player<T>(player: T) {
     return new class {
-      public setElo(value: number) {
+      public setElo(value: number): void {
         if (isEloRated(player))
           player.elo = value;
       }
-      public wonAgainst(opponent: T) {
+      public getElo(): number | undefined {
+        if (isEloRated(player))
+          return player.elo;
+      }
+      public deltaEloWith(other: T): number | undefined {
+        if (isEloRated(player) && isEloRated(other))
+          return player.elo - other.elo;
+      }
+      public wonAgainst(opponent: T): void {
         weelo.resolve_any(player, opponent, GameResult.WIN);
       }
-      public lostAgainst(opponent: T) {
+      public lostAgainst(opponent: T): void {
         weelo.resolve_any(player, opponent, GameResult.LOSS);
       }
-      public tiedAgainst(opponent: T) {
+      public tiedAgainst(opponent: T): void {
         weelo.resolve_any(player, opponent, GameResult.DRAW);
       }
     }

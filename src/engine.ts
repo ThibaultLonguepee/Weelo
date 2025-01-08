@@ -87,9 +87,9 @@ export class weelo {
               return player[key] - other[key];
           }
 
-          public wonAgainst = (opponent: T) => weelo._resolve_ladder(player, opponent, GameResult.WIN, key);
-          public lostAgainst = (opponent: T) => weelo._resolve_ladder(player, opponent, GameResult.LOSS, key);
-          public tiedAgainst = (opponent: T) => weelo._resolve_ladder(player, opponent, GameResult.DRAW, key);
+          public wonAgainst = (opponent: T) => weelo.resolve_ladder(player, opponent, GameResult.WIN, key);
+          public lostAgainst = (opponent: T) => weelo.resolve_ladder(player, opponent, GameResult.LOSS, key);
+          public tiedAgainst = (opponent: T) => weelo.resolve_ladder(player, opponent, GameResult.DRAW, key);
         }
       }
     }

@@ -28,8 +28,11 @@ export class weelo {
     b.elo += deltaB;
   }
 
+
+
   public static player<T>(player: T) {
     return new class {
+
       public setElo(value: number): void {
         if (isEloRated(player))
           player.elo = value;
@@ -42,6 +45,7 @@ export class weelo {
         if (isEloRated(player) && isEloRated(other))
           return player.elo - other.elo;
       }
+
       public wonAgainst(opponent: T): void {
         weelo.resolve_any(player, opponent, GameResult.WIN);
       }
@@ -54,8 +58,11 @@ export class weelo {
     }
   }
 
+
+
   public static ladder<T>(key: NumericKeys<T>) {
     return new class {
+
       public resolve(a: T, b: T, result: GameResult) {
         if (!isNumber(a[key]) || !isNumber(b[key]))
           return;
@@ -63,13 +70,32 @@ export class weelo {
         a[key] = (a[key] + deltaA) as T[NumericKeys<T>];
         b[key] = (b[key] + deltaB) as T[NumericKeys<T>];
       }
+
       public player(player: T) {
         return new class {
-          public setElo = (value: number) => { if (isEloRated(player)) player.elo = value; };
-          public wonAgainst = (opponent: T) => this._resolve(player, opponent, GameResult.WIN);
-          public lostAgainst = (opponent: T) => this._resolve(player, opponent, GameResult.LOSS);
-          public tiedAgainst = (opponent: T) => this._resolve(player, opponent, GameResult.DRAW);
-          public _resolve(a: T, b: T, result: GameResult) {
+          public set(value: number): void {
+            player[key] = value as T[NumericKeys<T>];
+          }
+          public get(): number | undefined {
+            if (isNumber(player[key]))
+              return player[key];
+          }
+          public deltaWith(other: T): number | undefined {
+            if (isNumber(player[key]) && isNumber(other[key]))
+              return player[key] - other[key];
+          }
+
+          public wonAgainst(opponent: T): void {
+            return this._resolve(player, opponent, GameResult.WIN);
+          }
+          public lostAgainst(opponent: T): void {
+            return this._resolve(player, opponent, GameResult.LOSS);
+          }
+          public tiedAgainst(opponent: T): void {
+            return this._resolve(player, opponent, GameResult.DRAW);
+          }
+
+          private _resolve(a: T, b: T, result: GameResult): void {
             if (!isNumber(a[key]) || !isNumber(b[key]))
               return;
             const { deltaA, deltaB } = weelo._eloDeltas(a[key], b[key], result);
@@ -80,6 +106,8 @@ export class weelo {
       }
     }
   }
+
+
 
   private static _eloDeltas(eloA: number, eloB: number, result: GameResult): { deltaA: number, deltaB: number } {
     const pA = this._p(eloA - eloB);
